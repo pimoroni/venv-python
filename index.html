@@ -1,0 +1,309 @@
+<!doctype HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Python Virtual Environments on Raspberry Pi Bookworm</title>
+    <meta name="description" content="An introduction to Python Venv on
+Raspberry Pi OS Bookworm.">
+    <style type="text/css">
+        .null {
+            color: #817
+            #a35
+            #c66
+            #e94
+            #ed0
+            #9d5
+            #4d8
+            #2cb
+            #0bc
+            #09c
+            #36b;
+        }
+
+        body {
+            background: #f5f5f5;
+            max-width: 800px;
+            font-size: 1.5em;
+        }
+        code {
+            box-sizing: border-box;
+            min-width: 100%;
+            display: inline-block;
+            padding: 20px;
+            background: #333333;
+            color: #f5f5f5;
+            white-space: pre-wrap;
+            font-family: ui-monospace, 
+             Menlo, Monaco, 
+             "Cascadia Mono", "Segoe UI Mono", 
+             "Roboto Mono", 
+             "Oxygen Mono", 
+             "Ubuntu Monospace", 
+             "Source Code Pro",
+             "Fira Mono", 
+             "Droid Sans Mono", 
+             "Courier New", monospace
+        }
+        code a, code a:visited, code a:active, code a:hover {
+            color: #f5f5f5;
+        }
+        li code, p code {
+            padding: 0.2em;
+            min-width: auto;
+        }
+        h1, h2, h3 {
+            font-family: Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif;
+        }
+        h1, h2, h3, p, li {
+            margin: 20px;
+        }
+        h2 {
+            margin-top: 80px;
+        }
+        code .user {color: #9d5;}
+        code .path {color: #09c;}
+        code .err {color: #a35;}
+        code .teal {color: #0bc;}
+        code .purp {color: #817;}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Python Virtual Environments on Raspberry Pi Bookworm</h1>
+    </header>
+    <main>
+        <section>
+            <header>
+                <h2>What's a virtual environment?</h2>
+            </header>
+            <article>
+                <p>
+                    While having to care about Python virtual environments
+                    is a bit of a bump in the road to getting started with
+                    Python they're not just a nuisance foisted upon you by
+                    curmudgeonly Linux distribution maintainers.
+                </p>
+                <p>
+                    A virtual environment is a useful, logical way of
+                    isolating your project dependencies from each other and
+                    ensuring things don't break when there are conflicts..
+                </p>
+                <p>
+                    <strong>eg:</strong> What happens if you create a new 
+                    project using Library v2, but you have old projects that
+                    only work with Library v1? Bad things, that's what. A
+                    virtual environments mean you can just spin up a clean
+                    environment for your new project and never have to worry
+                    about breaking or updating your old ones.
+                <p>
+                    They are also a great way for a user to install and use
+                    your project without affecting their other Python
+                    environments.
+                </p>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>Why do I <em>need</em> one?</h2>
+            </header>
+            <article>
+                <p>
+                    As of Raspberry Pi OS bookworm, you'll get a slap on the
+                    wrist in the form of an error message if you attempt to
+                    <code>pip install</code> any Python libraries on your
+                    Raspberry Pi.
+                </p>
+                <p>
+                    It looks something like this:
+                </p>
+                <code>$ pip install buildhat
+<span class="err">error:</span> <strong>externally-managed-environment</strong>
+
+<span class="err"></span>×</span> This environment is externally managed
+<span class="err"></span>╰─></span> To install Python packages system-wide, try apt install
+  python3-xyz, where xyz is the package you are trying to
+  install.
+
+  If you wish to install a non-Debian-packaged Python package,
+  create a virtual environment using python3 -m venv path/to/venv.
+  Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+  sure you have python3-full installed.
+
+  For more information visit <a href="http://rptl.io/venv" rel="nofollow">http://rptl.io/venv</a>
+
+<span class="purp">note:</span> If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
+<span class="teal">hint:</span> See PEP 668 for the detailed specification.</code>
+                <p>
+                    The "TLDR" (too long, don't read) of this message is that
+                    installing libraries from pypi (which is what pip does)
+                    into your system can cause all sorts of here-be-dragons
+                    weirdness and breakage. So it's recommended against.
+                </p>
+                <p>
+                    Instead, you use a virtual environment which is just
+                    a bunch of monkeying with paths to ensure your Python
+                    project dependencies are completely self-contained, and
+                    isolated from the system and each other.
+                </p>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>Okay, fine, how can I get started?</h2>
+            </header>
+            <article>
+                <p>
+                    Virtual environments aren't half as tricky as they sound,
+                    you can set one up with a single command:
+                </p>
+                <code>python3 -m venv --system-site-packages --prompt myenv ~/my_virtual_env</code>
+                <p><em>"Uh, you said it wasn't tricky?"</em></p>
+                <p>I did... didn't I...</p>
+                <p>
+                    Okay, let's break this down. First we
+                    have <code>python3 -m venv</code>, this bit is telling
+                    Python to load and run the "venv" module. Easy, right?
+                </p>
+                <p>
+                    Next up we have <code>--system-site-packages</code>, this
+                    is a little trickier to understand. "System" in this case
+                    refers to your Linux Distro, and "Site Packages" are the
+                    Python packages (usually installed by "apt") available to it.
+                </p>
+                <p>
+                    By specifying this argument we're asking "venv" to let our
+                    virtual environment see and use these system packages.
+                    This is very useful if we've got something big, complicated
+                    and scary installed by "apt" that might otherwise be tricky
+                    or unwildy to install in our virtual environment. In the
+                    case of a Raspberry Pi, this might be <code>gpiozero</code>
+                    and <code>lgpio</code> which are the default, blessed two-hit
+                    combo that make GPIO access quick and easy.
+                </p>
+                <p>
+                    Then we have <code>--prompt myenv</code>, this bit is entirely
+                    optional but is useful for giving each of your virtual
+                    environments a unique, friendly name so you can tell them
+                    apart. This might be your project name, or anything memorable
+                    to you. It'll show up in your prompt, like so:
+                </p>
+                <code>(myenv) <span class="user">phil@pirate</span>:<span class="path">~/</span></code>
+                <p>
+                    Finally, and this is it, I swear, you have the location you
+                    want to put your virtual environment. This could ve anywhere
+                    but in most cases you might want it in your project directory.
+                </p>
+                <p>
+                    In this case I've chosen <code>~/my_virtual_env</code> which
+                    creates the "my_virtual_env" directory inside your home
+                    directory- you can get there with <code>cd ~</code>.
+                </p>
+                <p>
+                    To use your virtual environment you must first activate it:
+                </p>
+                <code>source ~/my_virtual_env/bin/activate
+(myenv) <span class="user">phil@pirate</span>:<span class="path">~/</code>
+                <p>
+                    And now you can <code>pip install</code> to your heart's
+                    content!
+                </p>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>Okay, that sounds tedious. Make it easy for me!</h2>
+            </header>
+            <article>
+                <p>
+                    While a per-project virtual environment is a great idea
+                    in principle, we're used to thinking about our Pi as the
+                    project and most of the time it'll probably be doing one
+                    thing. So why bother with all this complexity?
+                </p>
+                <p>
+                    We have a couple of answers to this conundrum:
+                </p>
+                <ol>
+                    <li>Update our Python software installers to check for
+                        a virtual environment and ask you if you'd like one
+                        created.
+                    </li>
+                    <li>Provide a handy, dandy script you can <code>source</code>
+                    from your <code>~/.bashrc</code> to make activating a
+                    virtual environment automagic!</li>
+                </ol>
+                <p><em>"Sauce what from my whosit!?"</em></p>
+                <p>
+                    Right, <code>~/.bashrc</code> is a little wall-of-script
+                    that gets executed every time you open a terminal window
+                    on, or an SSH session into your Pi. By adding a little bit
+                    of virtual environment magic into this file we can create
+                    and activate a virtual environment automatically so you
+                    mostly never need to think about it.
+                </p>
+                <p>
+                    That script might look a little something like this:
+                </p>
+                <code>PY_ENV_DIR=~/Pimoroni/venv
+if [ ! -f $PY_ENV_DIR/bin/activate ]; then
+    printf "Creating user Python environment in $PY_ENV_DIR, please wait...\n"
+    mkdir -p $PY_ENV_DIR
+    python3 -m venv --system-site-packages --prompt Pimoroni $PY_ENV_DIR
+fi
+printf " ↓ ↓ ↓ ↓   Hello, we've activated a Python venv for you. To exit, type \"deactivate\".\n"
+source $PY_ENV_DIR/bin/activate</code>
+                <p>
+                    This horrifying spaghetti of arcane incantations does a
+                    few simple things:
+                </p>
+                <ol>
+                    <li>Check for a venv in ~/Pimoroni/venv</li>
+                    <li>Create one if it doesn't exist</li>
+                    <li>Output a little message so you know what's happening</li>
+                    <li>Activate the venv!</li>
+                </ol>
+                <p>
+                    The first time you run it, it'll create an activate a
+                    virtual environment, taking a few seconds. Subsequent runs
+                    (when you open your terminal) will instantly drop you into
+                    a usable, isolated environment for all your Python tinkering!
+                </p>
+            </article>
+        </section>
+        <section>
+            <header>
+                <h2>Uh, I'm having a little trouble with...</h2>
+            </header>
+            <article>
+                <h3>Running my Python code as superuser/sudo</h3>
+                <p>
+                    I can feel the glassy, disapproving stares on the back of
+                    my head as I write this, but: sometimes it's okay to use
+                    <code>sudo</code>.
+                </p>
+                <p>
+                    Notable cases might include running Python libraries like
+                    <code>rpi_ws281x</code> which control WS2812 (a.k.a NeoPixels)
+                    LEDs by using low-level Linux wizardry and hardware pokery.
+                </p>
+                <p>
+                    Trying to use <code>sudo</code> inside a virtual environment
+                    will normally result in sadness and bad times, but you can
+                    fix that with one weird trick:
+                </p>
+                <code>sudo --preserve-env=PATH python my_code.py</code>
+                <p>
+                    Since virtual environments monkey with <code>$PATH</code>
+                    to work their magic, we want to be sure that <code>sudo</code>
+                    works within the context of our monkey'd <code>$PATH</code>.
+                </p>
+                <p>
+                    The argument <code>--preserve-env=PATH</code> does just that!
+                </p>
+            </article>
+        </section>
+    </main>
+    <footer></footer>
+</body>
+</html>
