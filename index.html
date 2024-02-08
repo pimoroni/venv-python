@@ -276,6 +276,28 @@ source $PY_ENV_DIR/bin/activate</code>
                 <h2>Uh, I'm having a little trouble with...</h2>
             </header>
             <article>
+                <h3>Is there an easier way to manage environments?</h3>
+                <p>
+                    Yes. You can install and activate virtualenvwrapper to
+                    give you some handy command shortcuts for creating and
+                    activating virtual environments.
+                </p>
+                <code><span class="user">phil@pirate</span>: sudo apt install virtualenvwrapper python3-virtualenvwrapper</code>
+                <p>
+                    You can then activate the virtualenvwrapper helper with:
+                </p>
+                <code><span class="user">phil@pirate</span>: source /usr/share/virtualenvwrapper/virtualenvwrapper.sh</code>
+                <p>
+                    If you add this line to the bottom of your <code>~/.bashrc</code>
+                    then virtualenvwrapper will be activated when you log in.
+                </p>
+                <p>
+                    Once activated, you can use commands like -
+                </p>
+                <code><span class="user">phil@pirate</span>: mkvirtualenv virtual_environment_name
+<span class="user">phil@pirate</span>: workon virtual_environment_name
+                </code>
+                <p>You can <a href="https://virtualenvwrapper.readthedocs.io/en/latest/">read more about virtualenvwrapper here.</a></p>
                 <h3>Running my Python code as superuser/sudo</h3>
                 <p>
                     I can feel the glassy, disapproving stares on the back of
