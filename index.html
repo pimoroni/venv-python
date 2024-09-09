@@ -86,6 +86,7 @@ Raspberry Pi OS Bookworm.">
                     <li><a href="#why">Why do I <em>need</em> one?</a></li>
                     <li><a href="#how">Okay, fine, how can I get started?</a></li>
                     <li><a href="#easy">Okay, that sounds tedious. Make it easy for me!</a></li>
+                    <li><a href="#thonny">But what about Thonny?</a></li>
                     <li><a href="#help">Uh, I'm having a little trouble with...</a>
                         <ul>
                             <li><a href="#easier">Is there an easier way to manage environments?</a></li>
@@ -289,7 +290,13 @@ source $VENV_DIR/bin/activate</code>
                     The first time you run it, it'll create an activate a
                     virtual environment, taking a few seconds. Subsequent runs
                     (when you open your terminal) will instantly drop you into
-                    a usable, isolated environment for all your Python tinkering!
+                    a usable, semi-isolated* environment for all your Python tinkering!
+                </p>
+                <p>
+                    * note that the <code>--system-site-packages</code> argument exposes
+                    your environment to the system Python packages. We do this
+                    specifically for gpiozero and lgpio, the latter of which is
+                    simply broken on PyPi.
                 </p>
             </article>
         </section>
