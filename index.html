@@ -61,6 +61,9 @@ Raspberry Pi OS Bookworm.">
         h2 {
             margin-top: 80px;
         }
+        h3 {
+            margin-top: 60px;
+        }
         code .user {color: #9d5;}
         code .path {color: #09c;}
         code .err {color: #a35;}
@@ -74,6 +77,25 @@ Raspberry Pi OS Bookworm.">
     </header>
     <main>
         <section>
+            <header>
+                <h2>Contents</h2>
+            </header>
+            <article>
+                <ul>
+                    <li><a href="#what">What's a virtual environment?</a></li>
+                    <li><a href="#why">Why do I <em>need</em> one?</a></li>
+                    <li><a href="#how">Okay, fine, how can I get started?</a></li>
+                    <li><a href="#easy">Okay, that sounds tedious. Make it easy for me!</a></li>
+                    <li><a href="#help">Uh, I'm having a little trouble with...</a>
+                        <ul>
+                            <li><a href="#easier">Is there an easier way to manage environments?</a></li>
+                            <li><a href="#sudo">How do I run my Python code as superuser/sudo?</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </article>
+        </section>
+        <section id="what">
             <header>
                 <h2>What's a virtual environment?</h2>
             </header>
@@ -103,7 +125,7 @@ Raspberry Pi OS Bookworm.">
                 </p>
             </article>
         </section>
-        <section>
+        <section id="why">
             <header>
                 <h2>Why do I <em>need</em> one?</h2>
             </header>
@@ -148,7 +170,7 @@ Raspberry Pi OS Bookworm.">
                 </p>
             </article>
         </section>
-        <section>
+        <section id="how">
             <header>
                 <h2>Okay, fine, how can I get started?</h2>
             </header>
@@ -210,7 +232,7 @@ Raspberry Pi OS Bookworm.">
                 </p>
             </article>
         </section>
-        <section>
+        <section id="easy">
             <header>
                 <h2>Okay, that sounds tedious. Make it easy for me!</h2>
             </header>
@@ -245,20 +267,20 @@ Raspberry Pi OS Bookworm.">
                 <p>
                     That script might look a little something like this:
                 </p>
-                <code>PY_ENV_DIR=~/Pimoroni/venv
-if [ ! -f $PY_ENV_DIR/bin/activate ]; then
-    printf "Creating user Python environment in $PY_ENV_DIR, please wait...\n"
-    mkdir -p $PY_ENV_DIR
-    python3 -m venv --system-site-packages --prompt Pimoroni $PY_ENV_DIR
+                <code>VENV_DIR=~/.virtualenvs/pimoroni
+if [ ! -f $VENV_DIR/bin/activate ]; then
+    printf "Creating user Python environment in $VENV_DIR, please wait...\n"
+    mkdir -p $VENV_DIR
+    python3 -m venv --system-site-packages --prompt Pimoroni $VENV_DIR
 fi
 printf " ↓ ↓ ↓ ↓   Hello, we've activated a Python venv for you. To exit, type \"deactivate\".\n"
-source $PY_ENV_DIR/bin/activate</code>
+source $VENV_DIR/bin/activate</code>
                 <p>
                     This horrifying spaghetti of arcane incantations does a
                     few simple things:
                 </p>
                 <ol>
-                    <li>Check for a venv in ~/Pimoroni/venv</li>
+                    <li>Check for a venv in <code>~/.virtualenvs/pimoroni</code></li>
                     <li>Create one if it doesn't exist</li>
                     <li>Output a little message so you know what's happening</li>
                     <li>Activate the venv!</li>
@@ -271,12 +293,42 @@ source $PY_ENV_DIR/bin/activate</code>
                 </p>
             </article>
         </section>
-        <section>
+        <section id="thonny">
+            <header>
+                <h2>But what about Thonny?</h2>
+            </header>
+            <article>
+                <p>
+                    Raspberry Pi OS runs a somewhat customised version of Thonny
+                    that starts up into a cut-down basic mode by default.
+                </p>
+                <p>
+                    It might not be obvious at first, but this mode has no awareness
+                    of your virtual environment unless you delve into the settings
+                    and tell Thonny where it is.
+                </p>
+                <p>
+                    You can do this in Thonny by clicking the three little
+                    bars in the bottom right corner (or via the menu if you've
+                    enabled full mode) and selecting <code>~/.virtualenvs/pimoroni/bin/python</code>
+                </p>
+                <p>
+                    Alternatively you can edit <code>~/.config/Thonny/configuration.ini</code> and
+                    make sure it contains the following (adjusting for your home 
+                    directory accordingly):
+                </p>
+                <code>[LocalCPython]
+last_configurations = [{'run.backend_name': 'LocalCPython', 'LocalCPython.executable': '/home/pi/.virtualenvs/pimoroni/bin/python'}]
+executable = /home/p[/.virtualenvs/pimoroni/bin/python
+                </code>
+            </article>
+        </section>
+        <section id="help">
             <header>
                 <h2>Uh, I'm having a little trouble with...</h2>
             </header>
             <article>
-                <h3>Is there an easier way to manage environments?</h3>
+                <h3 id="easier">Is there an easier way to manage environments?</h3>
                 <p>
                     Yes. You can install and activate virtualenvwrapper to
                     give you some handy command shortcuts for creating and
@@ -297,8 +349,13 @@ source $PY_ENV_DIR/bin/activate</code>
                 <code><span class="user">phil@pirate</span>: mkvirtualenv virtual_environment_name
 <span class="user">phil@pirate</span>: workon virtual_environment_name
                 </code>
+                <p>
+                    Virtualenvwrapper will store environments in <code>~/.virtualenvs</code>,
+                    which should be recognised by tools like VSCode.
+                </p>
                 <p>You can <a href="https://virtualenvwrapper.readthedocs.io/en/latest/">read more about virtualenvwrapper here.</a></p>
-                <h3>Running my Python code as superuser/sudo</h3>
+
+                <h3 id="sudo">How do I run my Python code as superuser/sudo?</h3>
                 <p>
                     I can feel the glassy, disapproving stares on the back of
                     my head as I write this, but: sometimes it's okay to use
