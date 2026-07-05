@@ -7,20 +7,6 @@
     <meta name="description" content="An introduction to Python Venv on
 Raspberry Pi OS Bookworm.">
     <style type="text/css">
-        .null {
-            color: #817
-            #a35
-            #c66
-            #e94
-            #ed0
-            #9d5
-            #4d8
-            #2cb
-            #0bc
-            #09c
-            #36b;
-        }
-
         body {
             background: #f5f5f5;
             max-width: 800px;
@@ -51,6 +37,7 @@ Raspberry Pi OS Bookworm.">
         li code, p code {
             padding: 0.2em;
             min-width: auto;
+            font-size: 0.8em;
         }
         h1, h2, h3 {
             font-family: Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif;
@@ -110,15 +97,16 @@ Raspberry Pi OS Bookworm.">
                 <p>
                     A virtual environment is a useful, logical way of
                     isolating your project dependencies from each other and
-                    ensuring things don't break when there are conflicts..
+                    ensuring things don't break when there are conflicts.
                 </p>
                 <p>
                     <strong>eg:</strong> What happens if you create a new 
                     project using Library v2, but you have old projects that
-                    only work with Library v1? Bad things, that's what. A
-                    virtual environments mean you can just spin up a clean
+                    only work with Library v1? Bad things, that's what.
+                    Virtual environments mean you can just spin up a clean
                     environment for your new project and never have to worry
                     about breaking or updating your old ones.
+                </p>
                 <p>
                     They are also a great way for a user to install and use
                     your project without affecting their other Python
@@ -132,8 +120,9 @@ Raspberry Pi OS Bookworm.">
             </header>
             <article>
                 <p>
-                    As of Raspberry Pi OS bookworm, you'll get a slap on the
-                    wrist in the form of an error message if you attempt to
+                    As of Raspberry Pi OS Bookworm (and every release since),
+                    you'll get a slap on the wrist in the form of an error
+                    message if you attempt to
                     <code>pip install</code> any Python libraries on your
                     Raspberry Pi.
                 </p>
@@ -143,8 +132,8 @@ Raspberry Pi OS Bookworm.">
                 <code>$ pip install buildhat
 <span class="err">error:</span> <strong>externally-managed-environment</strong>
 
-<span class="err"></span>×</span> This environment is externally managed
-<span class="err"></span>╰─></span> To install Python packages system-wide, try apt install
+<span class="err">×</span> This environment is externally managed
+<span class="err">╰─></span> To install Python packages system-wide, try apt install
   python3-xyz, where xyz is the package you are trying to
   install.
 
@@ -214,7 +203,7 @@ Raspberry Pi OS Bookworm.">
                 <code>(myenv) <span class="user">phil@pirate</span>:<span class="path">~/</span></code>
                 <p>
                     Finally, and this is it, I swear, you have the location you
-                    want to put your virtual environment. This could ve anywhere
+                    want to put your virtual environment. This could be anywhere
                     but in most cases you might want it in your project directory.
                 </p>
                 <p>
@@ -226,7 +215,7 @@ Raspberry Pi OS Bookworm.">
                     To use your virtual environment you must first activate it:
                 </p>
                 <code>source ~/my_virtual_env/bin/activate
-(myenv) <span class="user">phil@pirate</span>:<span class="path">~/</code>
+(myenv) <span class="user">phil@pirate</span>:<span class="path">~/</span></code>
                 <p>
                     And now you can <code>pip install</code> to your heart's
                     content!
@@ -287,7 +276,7 @@ source $VENV_DIR/bin/activate</code>
                     <li>Activate the venv!</li>
                 </ol>
                 <p>
-                    The first time you run it, it'll create an activate a
+                    The first time you run it, it'll create and activate a
                     virtual environment, taking a few seconds. Subsequent runs
                     (when you open your terminal) will instantly drop you into
                     a usable, semi-isolated* environment for all your Python tinkering!
@@ -326,7 +315,7 @@ source $VENV_DIR/bin/activate</code>
                 </p>
                 <code>[LocalCPython]
 last_configurations = [{'run.backend_name': 'LocalCPython', 'LocalCPython.executable': '/home/pi/.virtualenvs/pimoroni/bin/python'}]
-executable = /home/p[/.virtualenvs/pimoroni/bin/python
+executable = /home/pi/.virtualenvs/pimoroni/bin/python
                 </code>
             </article>
         </section>
